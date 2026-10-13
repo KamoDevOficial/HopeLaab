@@ -1,8 +1,10 @@
 // Decodifica só os quadros perto da posição atual (fora da thread principal) e descarta os distantes.
 // Assim a rolagem não trava decodificando imagens grandes e a memória fica pequena e estável.
+import { clamp } from './math'
+
 type Source = ImageBitmap | HTMLImageElement
 const canBitmap = typeof createImageBitmap === 'function'
-const AHEAD = 22, BEHIND = 8, KEEP = 36
+const BEHIND = 6, KEEP = 44, MAX_PENDING = 8
 
 export default class FrameCache {
   w = 1000 // tamanho original dos quadros (todos iguais)
@@ -43,12 +45,14 @@ export default class FrameCache {
     this.pending.clear()
   }
 
-  // Garante bitmaps ao redor do quadro f, mais à frente na direção em que a pessoa está rolando.
-  want(f: number, dir: number) {
+  // Garante bitmaps ao redor do quadro f. `vel` (quadros/s) define a direção e quanto olhar à frente:
+  // quanto mais rápido o vídeo avança, mais longe o cache decodifica. Pedidos do mais perto ao mais longe.
+  want(f: number, vel: number) {
     if (!canBitmap) return
-    const c = Math.round(f)
-    const ahead = dir >= 0 ? AHEAD : BEHIND, behind = dir >= 0 ? BEHIND : AHEAD
-    for (let k = Math.max(0, c - behind); k <= Math.min(this.urls.length - 1, c + ahead); k++) this.ensure(k)
+    const c = Math.round(f), dir = vel >= 0 ? 1 : -1
+    const ahead = Math.round(clamp(8 + Math.abs(vel) * 0.35, 8, 36))
+    for (let i = 0; i <= ahead; i++) this.ensure(c + dir * i)
+    for (let i = 1; i <= BEHIND; i++) this.ensure(c - dir * i)
     this.bmps.forEach((b, k) => {
       if (Math.abs(k - c) > KEEP) { b.close(); this.bmps.delete(k) }
     })
@@ -56,7 +60,7 @@ export default class FrameCache {
 
   private ensure(k: number) {
     const im = this.imgs[k]
-    if (!im || this.bmps.has(k) || this.pending.has(k)) return
+    if (!im || this.bmps.has(k) || this.pending.has(k) || this.pending.size >= MAX_PENDING) return
     this.pending.add(k)
     const g = this.gen
     const opts: ImageBitmapOptions | undefined =

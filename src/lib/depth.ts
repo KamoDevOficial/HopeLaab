@@ -5,10 +5,10 @@ import { clamp, smootherstep as sm } from './math'
 // Chegada, permanência e saída são UMA curva contínua (sem quinas), então a troca entre mensagens não "tranca".
 // dirty (0..1): o quanto o tênis ainda está sujo. Enquanto o cartão está longe ele fica "sujo" também.
 // Devolve o deslocamento aplicado (px) ou null se o cartão está invisível.
-export function applyDepth(el: HTMLElement, t: number, corner: Corner, dirty: number) {
+export function applyDepth(el: HTMLElement, t: number, corner: Corner, dirty: number, calm = 1) {
   const arrive = sm(0, 0.45, t)
   const leave = sm(0.62, 1, t)
-  const alpha = sm(0, 0.32, t) * (1 - sm(0.66, 0.96, t))
+  const alpha = sm(0, 0.32, t) * (1 - sm(0.66, 0.96, t)) * calm
   if (alpha <= 0.01 || t < 0 || t > 1) {
     if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden'
     return null

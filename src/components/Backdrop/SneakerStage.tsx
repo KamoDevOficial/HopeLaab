@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from 'react'
 import { FRAMES } from '../../data/frames'
 import useScrollEngine from '../../hooks/useScrollEngine'
 import FrameCache from '../../lib/frameCache'
-import { smoothstep } from '../../lib/math'
+import { clamp, smoothstep } from '../../lib/math'
+import { look } from '../../lib/stageState'
+import { cleanOfFrame, videoFrame } from '../../lib/timeline'
 import { prefersReducedMotion } from '../../lib/scrollEngine'
 import { drawDust, drawShadow, drawSparkles, drawTrails, type Layout } from '../../lib/stageDraw'
 import './backdrop.css'
-import { cleanliness, videoFrame } from '../../lib/timeline'
 
 const WIDE = 1.25 // abaixo desta proporção (largura/altura) a tela é "em pé": tênis maior e mais alto
+const MAX_FPS = 75 // velocidade máxima do vídeo (quadros/s): num salto enorme ele avança rápido, mas contínuo
 const IDLE_GAP = 1 / 30 // parado, só as animações leves (flutuação, brilhos) rodam, a 30 quadros por segundo
 
 // Palco fixo da página. Os quadros são recortes do tênis (com transparência); sombra, inclinação,
@@ -19,13 +21,23 @@ export default function SneakerStage() {
   const cache = useRef<FrameCache | null>(null)
   const dpr = useRef(1)
   const needs = useRef(true)
-  const last = useRef({ y: -1, t: 0, f: 0, sx: 0 })
+  const last = useRef({ y: -1, t: 0, clock: 0, fv: 0, sx: 0 })
   const [ready, setReady] = useState(false)
 
   const paint = (y: number, p: number, time: number) => {
     const cv = canvasRef.current, fc = cache.current
     if (!cv || !fc) return
-    const moving = Math.abs(y - last.current.y) > 0.01
+    const st = last.current
+    const N = FRAMES.length
+    const dt = Math.min(0.05, Math.max(0.001, time - st.clock))
+    st.clock = time
+    // O vídeo persegue o quadro pedido pela rolagem com velocidade limitada (e o cache acompanha),
+    // em vez de pular centenas de quadros de uma vez.
+    const ft = videoFrame(p, N)
+    const gap = ft - st.fv
+    const step = prefersReducedMotion() ? gap : clamp(gap * (1 - Math.exp(-30 * dt)), -MAX_FPS * dt, MAX_FPS * dt)
+    st.fv = Math.abs(gap - step) < 0.005 ? ft : st.fv + step
+    const moving = Math.abs(y - st.y) > 0.01 || st.fv !== ft
     if (!moving && !needs.current && (prefersReducedMotion() || time - last.current.t < IDLE_GAP)) return
     last.current.y = y
     last.current.t = time
@@ -43,16 +55,16 @@ export default function SneakerStage() {
     const s = Math.min((W * (portrait ? 0.96 : 0.62)) / fc.w, (H * 0.6) / fc.h)
     const sw = fc.w * s, sh = fc.h * s
     fc.setTarget(sw)
-    const f = videoFrame(p, FRAMES.length)
-    fc.want(f, f - last.current.f)
-    last.current.f = f
+    const f = st.fv
+    look.clean = cleanOfFrame(f, N)
+    fc.want(f, step / dt)
     const i0 = Math.floor(f), a = f - i0
     const A = fc.get(i0)
     ctx.clearRect(0, 0, W, H)
     if (!A) return
 
     const L: Layout = { W, H, d, cx: W / 2, cy: portrait ? Math.max(H * 0.3, sh / 2 + 98 * d) : H * 0.5, sw, sh }
-    const clean = cleanliness(p)
+    const clean = look.clean
     const still = prefersReducedMotion()
     const bob = still ? 0 : Math.sin(time * 1.15) // flutuação lenta
     drawShadow(ctx, L, (bob + 1) / 2)

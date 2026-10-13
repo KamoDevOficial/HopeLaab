@@ -5,5 +5,5 @@ import { subscribe, type Tick } from '../lib/scrollEngine'
 export default function useScrollEngine(fn: Tick) {
   const ref = useRef(fn)
   ref.current = fn
-  useEffect(() => subscribe((y, p, t) => ref.current(y, p, t)), [])
+  useEffect(() => subscribe((y, p, t, s) => ref.current(y, p, t, s)), [])
 }

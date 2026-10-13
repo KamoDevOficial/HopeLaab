@@ -27,8 +27,9 @@ export const STEPS: Step[] = [
   { title: 'Limpeza e entrega', text: 'Lavagem à mão em até 3 dias úteis, com foto do resultado antes de entregar.' },
 ]
 
+// Exemplos fictícios: troque por avaliações reais de clientes antes de publicar.
 export const REVIEWS: Review[] = [
-  { name: 'Raphael Araujo', service: 'Limpeza completa', text: 'Nem imaginava que meu tênis poderia ficar tão branco!' },
-  { name: 'Pedro Kamoda', service: 'Entressola branca', text: 'Achei que meu tênis não tinha mais jeito. Ficou novo e o cabedal nem manchou.' },
-  { name: 'Rayza Rodrigues', service: 'Camurça e nobuck', text: 'A limpeza a seco no meu camurça ficou impecável, e recebi a foto antes da entrega.' },
+  { name: 'Camila R.', service: 'Limpeza completa', text: 'Meu tênis estava amarelado de tanto uso. Voltou branco de verdade, até a sola.' },
+  { name: 'Rafael T.', service: 'Entressola branca', text: 'Achei que a entressola não tinha mais jeito. Ficou nova e o cabedal nem manchou.' },
+  { name: 'Juliana M.', service: 'Camurça e nobuck', text: 'A limpeza a seco no meu camurça ficou impecável, e recebi a foto antes da entrega.' },
 ]
