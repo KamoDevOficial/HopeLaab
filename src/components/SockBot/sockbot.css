@@ -1,0 +1,50 @@
+.sockbot{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+.bot-fab{width:58px;height:58px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:var(--paper);cursor:pointer;box-shadow:0 0 0 3px var(--ring),0 12px 24px -8px rgba(23,195,232,.6);transition:transform .2s;animation:sock-wiggle 1.6s 1.5s 1 both}
+.bot-fab:hover{transform:scale(1.07) rotate(-5deg)}
+.bot-fab:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+@keyframes sock-wiggle{0%,100%{transform:none}20%{transform:rotate(-12deg)}45%{transform:rotate(9deg)}70%{transform:rotate(-5deg)}}
+.bot-panel{display:flex;flex-direction:column;width:min(360px,100vw - 32px);max-height:min(560px,calc(100svh - 120px));overflow:hidden;background:var(--paper);border-radius:28px;box-shadow:0 24px 50px -16px rgba(29,36,51,.45),0 0 0 1px rgba(29,36,51,.06)}
+.bot-panel header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(29,36,51,.08)}
+.bot-panel header div{flex:1;line-height:1.2}
+.bot-panel header small{display:block;color:var(--mute);font-size:.8rem}
+.bot-panel header button{width:36px;height:36px;border:0;border-radius:50%;background:var(--soft);color:var(--ink);cursor:pointer}
+.bot-log{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:14px 16px;background:#eaf0f4}
+.bot-input{flex-shrink:0;min-height:84px;padding:12px 16px 16px;border-top:1px solid rgba(29,36,51,.08)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{padding:9px 16px;border:2px solid var(--ring);border-radius:999px;background:var(--paper);color:var(--ink);font:inherit;font-size:.9rem;font-weight:600;cursor:pointer}
+.chips button:hover{background:var(--ring)}
+.bot-input form{display:flex;gap:8px}
+.bot-input input{flex:1;min-width:0;padding:11px 16px;border:0;border-radius:999px;background:var(--soft);color:var(--ink);font:inherit;font-size:16px}
+.bot-input form button{padding:0 18px;border:0;border-radius:999px;background:var(--ink);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+.bot-input form button:disabled{opacity:.5}
+.bot-intro{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:6px;padding:20px 18px;border-radius:24px;background:#e6f8fd;box-shadow:inset 0 0 0 2px var(--ring);text-align:center}
+.bot-intro b{font-size:1.2rem;line-height:1.2;letter-spacing:-.01em}
+.bot-intro p{max-width:28ch;font-size:.95rem;line-height:1.4}
+/* Conversa no estilo WhatsApp: bot à esquerda (branco), usuário à direita (verde), com hora e tique. */
+.row{display:flex}
+.row.user{justify-content:flex-end}
+.shot{display:block;width:220px;max-width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px}
+.msg.typing{flex-direction:row;gap:4px;padding:13px 14px}
+.msg.typing i{width:7px;height:7px;border-radius:50%;background:var(--mute);animation:typing-dot 1s infinite}
+.msg.typing i:nth-child(2){animation-delay:.15s}
+.msg.typing i:nth-child(3){animation-delay:.3s}
+@keyframes typing-dot{0%,60%,100%{transform:none;opacity:.4}30%{transform:translateY(-4px);opacity:1}}
+.chips label{position:relative;display:inline-block;overflow:hidden;padding:9px 16px;border:2px solid var(--ring);border-radius:999px;background:var(--ring);color:var(--ink);font-size:.9rem;font-weight:600;cursor:pointer}
+.chips label input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.chips label:focus-within{outline:3px solid var(--ink);outline-offset:2px}
+.note{max-width:30ch;font-size:.85rem;text-align:center;color:var(--mute)}
+/* Balões: usuário em azul-marinho, ManéMeia em branco; tudo dentro do corpo do chat. */
+.msg{display:flex;flex-direction:column;gap:4px;max-width:82%;padding:9px 14px 7px;font-size:.95rem;line-height:1.4}
+.msg.bot{background:#fff;color:var(--ink);border-radius:20px 20px 20px 6px;box-shadow:0 0 0 1px rgba(29,36,51,.08),0 2px 6px -2px rgba(29,36,51,.12)}
+.msg.user{background:var(--ink);color:#fff;border-radius:20px 20px 6px 20px}
+.msg p+p{margin-top:3px}
+.meta{align-self:flex-end;font-size:.7rem;line-height:1;opacity:.6}
+.chips.stack{flex-direction:column}
+.chips.stack button{width:100%;padding:13px 16px;font-size:.95rem}
+.bot-done{display:flex;flex-direction:column;gap:10px}
+.bot-done button{width:100%;min-height:48px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer}
+.bot-done .send{display:flex;align-items:center;justify-content:center;margin:0;border:0;background:#25d366;color:#08260f;box-shadow:0 8px 18px -8px rgba(37,211,102,.7)}
+.bot-done .send:hover{transform:none;box-shadow:0 0 0 3px rgba(37,211,102,.35)}
+.bot-done .ghost{border:2px solid rgba(29,36,51,.22);background:#fff;color:var(--ink)}
+.bot-done .ghost:hover{border-color:var(--ink)}
+.bot-done .note{align-self:center}

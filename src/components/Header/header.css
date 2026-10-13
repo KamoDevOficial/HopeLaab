@@ -1,0 +1,10 @@
+.nav{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:20;display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--paper);border-radius:999px;box-shadow:0 12px 32px -12px rgba(29,36,51,.35),0 0 0 1px rgba(29,36,51,.05)}
+.nav a{position:relative;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--soft);transition:transform .2s,box-shadow .2s,background .2s}
+.nav a:hover{transform:scale(1.06)}
+.nav svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav a.on{background:var(--paper);transform:scale(1.1);box-shadow:0 0 0 3px var(--ring),0 8px 18px -4px rgba(23,195,232,.6)}
+.nav span{position:absolute;top:calc(100% + 16px);left:50%;transform:translateX(-50%);padding:3px 11px;background:var(--paper);border-radius:999px;box-shadow:0 6px 16px -6px rgba(29,36,51,.35);font-size:.8rem;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+.nav a.on span,.nav a:hover span,.nav a:focus-visible span{opacity:1}
+.nav i{width:1px;height:28px;background:rgba(29,36,51,.14);margin:0 4px}
+.nav .brand{background:var(--ink);color:#fff;font-size:1.25rem;font-weight:700;letter-spacing:-.04em}
+@media(max-width:760px){.nav{gap:4px;padding:7px 9px}.nav a{width:42px;height:42px}.nav i{margin:0 2px}}
