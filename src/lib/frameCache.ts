@@ -2,7 +2,7 @@
 // Assim a rolagem não trava decodificando imagens grandes e a memória fica pequena e estável.
 type Source = ImageBitmap | HTMLImageElement
 const canBitmap = typeof createImageBitmap === 'function'
-const AHEAD = 14, BEHIND = 6, KEEP = 30
+const AHEAD = 22, BEHIND = 8, KEEP = 36
 
 export default class FrameCache {
   w = 1000 // tamanho original dos quadros (todos iguais)

@@ -5,6 +5,7 @@ import { smoothstep } from '../../lib/math'
 import { trails } from '../../lib/stageState'
 import type { Corner } from '../../types'
 import './scenes.css'
+import { cleanliness } from '../../lib/timeline'
 
 interface Props { id?: string; corner: Corner; wide?: boolean; children: ReactNode }
 
@@ -36,7 +37,7 @@ export default function Scene({ id, corner, wide, children }: Props) {
     const t = (y + innerHeight - top) / (innerHeight + h)
     if (t === lastT.current) return
     lastT.current = t
-    const o = applyDepth(el, t, corner, 1 - smoothstep(0.22, 0.62, p))
+    const o = applyDepth(el, t, corner, 1 - cleanliness(p))
     if (o) trails.set(el, { x: rx + o.x, y: ry + o.y, t })
     else trails.delete(el)
   })

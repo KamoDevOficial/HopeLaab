@@ -6,6 +6,7 @@ import { smoothstep } from '../../lib/math'
 import { prefersReducedMotion } from '../../lib/scrollEngine'
 import { drawDust, drawShadow, drawSparkles, drawTrails, type Layout } from '../../lib/stageDraw'
 import './backdrop.css'
+import { cleanliness, videoFrame } from '../../lib/timeline'
 
 const WIDE = 1.25 // abaixo desta proporção (largura/altura) a tela é "em pé": tênis maior e mais alto
 const IDLE_GAP = 1 / 30 // parado, só as animações leves (flutuação, brilhos) rodam, a 30 quadros por segundo
@@ -42,7 +43,7 @@ export default function SneakerStage() {
     const s = Math.min((W * (portrait ? 0.96 : 0.62)) / fc.w, (H * 0.6) / fc.h)
     const sw = fc.w * s, sh = fc.h * s
     fc.setTarget(sw)
-    const f = p * (FRAMES.length - 1)
+    const f = videoFrame(p, FRAMES.length)
     fc.want(f, f - last.current.f)
     last.current.f = f
     const i0 = Math.floor(f), a = f - i0
@@ -51,7 +52,7 @@ export default function SneakerStage() {
     if (!A) return
 
     const L: Layout = { W, H, d, cx: W / 2, cy: portrait ? Math.max(H * 0.3, sh / 2 + 98 * d) : H * 0.5, sw, sh }
-    const clean = smoothstep(0.22, 0.62, p)
+    const clean = cleanliness(p)
     const still = prefersReducedMotion()
     const bob = still ? 0 : Math.sin(time * 1.15) // flutuação lenta
     drawShadow(ctx, L, (bob + 1) / 2)
