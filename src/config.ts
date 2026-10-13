@@ -1,2 +1,1 @@
-// Número com DDI e DDD, só dígitos. Vazio = o WhatsApp pergunta para quem enviar.
-export const WHATSAPP_NUMBER: string = ''
+export const WHATSAPP_NUMBER: string = '+5511967397919'
