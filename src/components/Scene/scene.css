@@ -1,0 +1,175 @@
+/* ===== Cena de fundo ===== */
+.scene{--L:12s;--sy:13vh;--sw:min(42vw,76vh,640px);--x1:21vw;--x2:-21vw;position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(#9fd8f6 0%,#cdeefc 52%,#effaff 100%);contain:strict}
+.scene img{display:block;user-select:none;pointer-events:none}
+.scene .sky-dusk{position:absolute;inset:0;background:linear-gradient(#c9b8f5,#ffc8dc 52%,#ffe9cc);opacity:0}
+
+/* ----- animações ligadas ao scroll -----
+   Navegadores com scroll-driven animations rodam tudo no compositor (zero JS).
+   Nos demais, um único listener passivo grava --sp (0 a 1) e as mesmas animações são "roladas" por atraso negativo. */
+.sd{animation-duration:1s;animation-timing-function:linear;animation-fill-mode:both;animation-play-state:paused;animation-delay:calc(var(--sp,0) * -1s)}
+@supports (animation-timeline:scroll()){
+  .sd{animation-timeline:scroll(root block);animation-duration:auto;animation-delay:0s;animation-play-state:running}
+}
+.par{animation-name:par;will-change:transform}
+@keyframes par{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,calc(var(--k) * -1vh),0)}}
+.sky-dusk{animation-name:dusk}
+@keyframes dusk{0%,45%{opacity:0}100%{opacity:.85}}
+
+/* ----- relevo (cada camada com um pedacinho abaixo da tela para a paralaxe não abrir buracos) ----- */
+.layer{position:absolute;inset:0}
+.layer img{position:absolute;left:50%;width:max(100vw,1100px);max-width:none;transform:translateX(-50%)}
+.far{bottom:calc(27vh - 4vh)}
+.trees{bottom:calc(15vh - 6vh)}
+.mid{bottom:calc(11vh - 8vh)}
+.bank{bottom:-10vh;width:max(108vw,1200px)!important}
+
+/* ----- nuvens ----- */
+.cloud{position:absolute;left:0;will-change:transform;animation:drift var(--dur) linear var(--del) infinite}
+.cloud.k1{top:7%;width:clamp(150px,16vw,260px);--dur:90s;--del:-30s}
+.cloud.k2{top:19%;width:clamp(110px,11vw,190px);--dur:130s;--del:-85s;opacity:.92}
+.cloud.k3{top:30%;width:clamp(90px,9vw,150px);--dur:110s;--del:-12s;opacity:.85}
+.cloud.k4{top:12%;width:clamp(120px,13vw,210px);--dur:160s;--del:-120s}
+@keyframes drift{from{transform:translate3d(-30vw,0,0)}to{transform:translate3d(115vw,0,0)}}
+
+/* ----- neve (camadas que caem em loop perfeito, uma telha de cada vez) ----- */
+.snow{position:absolute;left:0;right:0;top:0;height:calc(100% + 520px);background-repeat:repeat;will-change:transform}
+.snow.back{background-size:260px;opacity:.9;animation:fall-a 16s linear infinite}
+.snow.front.a{background-size:380px;animation:fall-b 11s linear infinite}
+.snow.front.b{background-size:520px;animation:fall-c 8s linear infinite}
+@keyframes fall-a{from{transform:translate3d(0,-260px,0)}to{transform:translate3d(0,0,0)}}
+@keyframes fall-b{from{transform:translate3d(0,-380px,0)}to{transform:translate3d(0,0,0)}}
+@keyframes fall-c{from{transform:translate3d(0,-520px,0)}to{transform:translate3d(0,0,0)}}
+
+/* ===== Palco do tênis ===== */
+.stage-pos{position:absolute;left:50%;top:var(--sy);width:var(--sw);margin-left:calc(var(--sw) / -2);animation-name:stage-path;animation-timing-function:ease-in-out;will-change:transform}
+@keyframes stage-path{
+  0%,8%{transform:translate3d(var(--x1),0,0) rotate(-2deg) scale(1)}
+  26%,52%{transform:translate3d(var(--x2),0,0) rotate(3deg) scale(.94)}
+  70%,100%{transform:translate3d(var(--x1),0,0) rotate(-2deg) scale(.98)}
+}
+.stage{position:relative;width:100%;aspect-ratio:600/494}
+.stage-loop,.stage-bob{position:absolute;inset:0;will-change:transform}
+.stage-loop{animation:conveyor var(--L) linear infinite}
+.stage-bob{animation:bob 3.2s ease-in-out infinite alternate}
+.stage-shadow{position:absolute;left:14%;bottom:-4%;width:72%;height:5%;border-radius:50%;background:rgba(31,45,61,.18);animation:shade 3.2s ease-in-out infinite alternate}
+@keyframes bob{from{transform:translate3d(0,-2.4%,0) rotate(-1.2deg)}to{transform:translate3d(0,2.4%,0) rotate(1.2deg)}}
+@keyframes shade{from{transform:scaleX(.88);opacity:.8}to{transform:scaleX(1.04);opacity:1}}
+@keyframes conveyor{
+  0%{transform:translate3d(-118vw,0,0);animation-timing-function:cubic-bezier(.25,1.2,.4,1)}
+  9%{transform:translate3d(0,0,0)}
+  89%{transform:translate3d(0,0,0);animation-timing-function:cubic-bezier(.6,0,.9,.4)}
+  100%{transform:translate3d(118vw,0,0)}
+}
+
+.gift{position:absolute;left:6.67%;top:53.4%;width:86.67%}
+.shoe-wrap{position:absolute;left:0;top:0;width:100%;height:72.87%;transform-origin:50% 92%;animation:shoe var(--L) ease-in-out infinite;will-change:transform}
+.shoe-wrap>img{position:absolute}
+.shoe{left:0;top:0;width:100%;height:100%}
+@keyframes shoe{
+  0%,7%{transform:none}
+  9%{transform:scale(1.05,.93)} 11.5%{transform:scale(.98,1.03)} 14%,34%{transform:none}
+  36%{transform:rotate(1.4deg)} 38.6%{transform:rotate(-1.4deg)} 41.2%{transform:rotate(1.4deg)} 43.8%{transform:rotate(-1.4deg)}
+  46.4%{transform:rotate(1.4deg)} 49%{transform:rotate(-1.4deg)} 51.6%{transform:rotate(1.4deg)} 54.2%{transform:rotate(-1.4deg)}
+  56.8%{transform:rotate(1.4deg)} 59.4%{transform:rotate(-1.4deg)} 62%{transform:none}
+  67%{transform:scale(1.06,.9)} 71%{transform:translate3d(0,-10%,0) scale(.94,1.08)} 75%{transform:scale(1.07,.92)}
+  78%{transform:scale(.98,1.03)} 81%,100%{transform:none}
+}
+
+/* rostos (cada fase troca na hora, como num desenho animado) */
+.face{left:55.8%;top:46.7%;width:16.7%}
+.face.sad{animation:f-sad var(--L) linear infinite}
+.face.glee{opacity:0;animation:f-glee var(--L) linear infinite}
+.face.happy{opacity:0;animation:f-happy var(--L) linear infinite}
+@keyframes f-sad{0%,33.9%{opacity:1}34%,99.4%{opacity:0}100%{opacity:1}}
+@keyframes f-glee{0%,33.9%{opacity:0}34%,62.9%{opacity:1}63%,100%{opacity:0}}
+@keyframes f-happy{0%,62.9%{opacity:0}63%,99.4%{opacity:1}100%{opacity:0}}
+
+/* lama: sai em três rodadas conforme a esponja passa */
+.mud{transform-origin:50% 55%}
+.mud.g0{animation:mud0 var(--L) ease-in infinite}
+.mud.g1{animation:mud1 var(--L) ease-in infinite}
+.mud.g2{animation:mud2 var(--L) ease-in infinite}
+@keyframes mud0{0%,42%{opacity:1;transform:scale(1)}44.5%{opacity:1;transform:scale(1.14)}47.5%{opacity:0;transform:scale(0)}99.4%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
+@keyframes mud1{0%,48.5%{opacity:1;transform:scale(1)}51%{opacity:1;transform:scale(1.14)}54%{opacity:0;transform:scale(0)}99.4%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
+@keyframes mud2{0%,55%{opacity:1;transform:scale(1)}57.5%{opacity:1;transform:scale(1.14)}60.5%{opacity:0;transform:scale(0)}99.4%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
+
+/* brilho atrás do tênis limpo */
+.glow{position:absolute;left:-10%;top:-30%;width:120%;height:150%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,246,176,.95),rgba(255,246,176,0));opacity:0;animation:glow var(--L) ease-in-out infinite}
+@keyframes glow{0%,64%{opacity:0;transform:scale(.6)}72%{opacity:1;transform:scale(1)}84%{opacity:.75;transform:scale(1.06)}93%,100%{opacity:0;transform:scale(1.1)}}
+
+/* efeitos: cada grupo só aparece na sua fase; os itens têm loop próprio */
+.fx{position:absolute;inset:0;opacity:0}
+.fx.flies{animation:fx-flies var(--L) linear infinite}
+.fx.bubbles{animation:fx-bubbles var(--L) linear infinite}
+.fx.rain{animation:fx-rain var(--L) linear infinite}
+.fx.sparks{animation:fx-sparks var(--L) linear infinite}
+@keyframes fx-flies{0%,6%{opacity:0}9%,31%{opacity:1}34%,100%{opacity:0}}
+@keyframes fx-bubbles{0%,35%{opacity:0}37%,63%{opacity:1}66%,100%{opacity:0}}
+@keyframes fx-rain{0%,60.5%{opacity:0}62.5%,73%{opacity:1}75.5%,100%{opacity:0}}
+@keyframes fx-sparks{0%,68%{opacity:0}70%,89%{opacity:1}92%,100%{opacity:0}}
+
+.fly{position:absolute;width:7%;will-change:transform}
+.fly.f1{left:22%;top:2%;animation:fly1 2.6s ease-in-out infinite}
+.fly.f2{left:62%;top:6%;animation:fly2 3.1s ease-in-out infinite}
+@keyframes fly1{0%,100%{transform:translate3d(0,0,0) rotate(-8deg)}25%{transform:translate3d(240%,-60%,0) rotate(10deg)}50%{transform:translate3d(420%,60%,0) rotate(-6deg)}75%{transform:translate3d(170%,100%,0) rotate(12deg)}}
+@keyframes fly2{0%,100%{transform:translate3d(0,0,0) rotate(8deg)}30%{transform:translate3d(-260%,-40%,0) rotate(-10deg)}60%{transform:translate3d(-400%,70%,0) rotate(6deg)}80%{transform:translate3d(-150%,90%,0) rotate(-12deg)}}
+
+.sponge-wrap{position:absolute;left:36%;top:27%;width:28%;opacity:0;transform-origin:50% 60%;animation:sponge var(--L) ease-in-out infinite;will-change:transform,opacity}
+.sponge-wrap img{width:100%}
+@keyframes sponge{
+  0%,29%{opacity:0;transform:translate3d(130%,-170%,0) rotate(30deg) scale(.8)}
+  33%{opacity:1;transform:translate3d(-95%,-6%,0) rotate(-8deg) scale(1)}
+  35.6%{opacity:1;transform:translate3d(95%,4%,0) rotate(8deg)}
+  38.2%{transform:translate3d(-95%,-4%,0) rotate(-8deg)}
+  40.8%{transform:translate3d(95%,4%,0) rotate(8deg)}
+  43.4%{transform:translate3d(-95%,-4%,0) rotate(-8deg)}
+  46%{transform:translate3d(95%,4%,0) rotate(8deg)}
+  48.6%{transform:translate3d(-95%,-4%,0) rotate(-8deg)}
+  51.2%{transform:translate3d(95%,4%,0) rotate(8deg)}
+  53.8%{transform:translate3d(-95%,-4%,0) rotate(-8deg)}
+  56.4%{transform:translate3d(95%,4%,0) rotate(8deg)}
+  59%{transform:translate3d(-95%,-4%,0) rotate(-8deg)}
+  61.6%{opacity:1;transform:translate3d(10%,-10%,0) rotate(0)}
+  66%,100%{opacity:0;transform:translate3d(140%,-190%,0) rotate(34deg) scale(.8)}
+}
+.bubble{position:absolute;opacity:0;will-change:transform,opacity;animation:rise var(--t) ease-out var(--d) infinite}
+@keyframes rise{0%{opacity:0;transform:translate3d(0,0,0) scale(.3)}15%{opacity:1;transform:translate3d(0,-45%,0) scale(1)}100%{opacity:0;transform:translate3d(28%,-430%,0) scale(.9)}}
+
+.rain-cloud{position:absolute;left:30%;top:-17%;width:40%;opacity:0;transform-origin:50% 80%;animation:rcloud var(--L) ease-in-out infinite;will-change:transform,opacity}
+@keyframes rcloud{
+  0%,59%{opacity:0;transform:scale(0)}
+  62.5%{opacity:1;transform:scale(1.1)} 64%{transform:scale(1)} 73%{opacity:1;transform:scale(1)} 76%{opacity:1;transform:scale(1.04)}
+  79%,100%{opacity:0;transform:scale(0)}
+}
+.drop{position:absolute;top:2%;width:4.6%;opacity:0;will-change:transform,opacity;animation:fall .85s ease-in var(--d) infinite}
+@keyframes fall{0%{opacity:0;transform:translate3d(0,0,0)}12%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translate3d(0,560%,0)}}
+
+.spark{position:absolute;opacity:0;will-change:transform,opacity;animation:pop var(--t) ease-in-out var(--d) infinite}
+@keyframes pop{0%,100%{opacity:0;transform:scale(0) rotate(0)}40%{opacity:1;transform:scale(1.15) rotate(60deg)}70%{opacity:1;transform:scale(.85) rotate(120deg)}}
+
+/* antes de a tela de carregamento sair, a cena fica parada no primeiro quadro */
+.scene:not(.is-running) *{animation-play-state:paused!important}
+
+/* ===== telas estreitas: palco no alto, textos embaixo ===== */
+@media(max-width:899px){
+  .scene{--sy:15vh;--sw:min(80vw,46vh,420px);--x1:0px;--x2:0px}
+  .far{bottom:calc(30vh - 4vh)}
+  .trees{bottom:calc(17vh - 6vh)}
+  .mid{bottom:calc(12vh - 8vh)}
+}
+
+/* ===== celular deitado: volta ao layout lado a lado, mas compacto ===== */
+@media(max-height:520px) and (min-width:600px){
+  .scene{--sy:74px;--sw:min(40vw,64vh,420px);--x1:23vw;--x2:-23vw}
+  .far{bottom:calc(24vh - 4vh)}
+  .trees{bottom:calc(12vh - 6vh)}
+  .mid{bottom:calc(8vh - 8vh)}
+}
+
+/* ===== movimento reduzido: cena parada, tênis limpo e feliz ===== */
+@media(prefers-reduced-motion:reduce){
+  .scene *{animation:none!important}
+  .scene .stage-pos{transform:translate3d(var(--x1),0,0)}
+  .scene .mud,.scene .face.sad,.scene .face.glee,.scene .sponge-wrap,.scene .fx,.scene .rain-cloud,.scene .glow{display:none}
+  .scene .face.happy{opacity:1}
+}

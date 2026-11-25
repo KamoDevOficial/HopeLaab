@@ -1,24 +1,24 @@
-import type { NavItem, Review, Service, Step } from '../types'
+import type { NavItem, Service, Step } from '../types'
 
 export const NAV: NavItem[] = [
   { id: 'inicio', label: 'Início', icon: 'home' },
   { id: 'servicos', label: 'Serviços', icon: 'sparkle' },
   { id: 'processo', label: 'Como funciona', icon: 'drop' },
-  { id: 'reviews', label: 'Avaliações', icon: 'star' },
-  { id: 'agendar', label: 'Orçamento', icon: 'calendar' },
+  { id: 'agendar', label: 'Orçamento', icon: 'gift' },
 ]
 export const NAV_IDS = NAV.map((n) => n.id)
 
-export const PITCH: Step[] = [
-  { title: 'Sem máquina', text: 'Escova macia e espuma neutra, do cabedal à entressola.' },
-  { title: 'Secagem à sombra', text: 'O material não deforma nem amarela.' },
-  { title: 'Prova do resultado', text: 'Você recebe a foto do par limpo antes da entrega.' },
-]
+export const HERO = {
+  tag: 'Edição de Natal',
+  title: ['Seu tênis merece um', 'Natal branquinho'],
+  text: 'A HopeLaab lava à mão, devolve o branco de volta e ainda manda a foto do resultado antes da entrega.',
+  perks: ['Lavagem 100% à mão', 'Foto do resultado', 'Retirada em casa'],
+}
 
 export const SERVICES: Service[] = [
-  { title: 'Limpeza completa', text: 'Cabedal, língua, cadarço e entressola lavados à mão e secos à sombra.', price: 'a partir de R$ 59', pick: true },
-  { title: 'Entressola branca', text: 'Tira o amarelado da borracha e do EVA sem manchar o cabedal.', price: 'a partir de R$ 45' },
-  { title: 'Camurça e nobuck', text: 'Limpeza a seco, para o material não endurecer.', price: 'a partir de R$ 79' },
+  { title: 'Limpeza completa', text: 'Cabedal, língua, cadarço e entressola lavados à mão e secos à sombra.', price: 'a partir de R$ 59', icon: 'shoe', pick: true },
+  { title: 'Entressola branca', text: 'Tira o amarelado da borracha e do EVA sem manchar o cabedal.', price: 'a partir de R$ 45', icon: 'sole' },
+  { title: 'Camurça e nobuck', text: 'Limpeza a seco, para o material não endurecer nem perder a cor.', price: 'a partir de R$ 79', icon: 'suede' },
 ]
 
 export const STEPS: Step[] = [
@@ -27,9 +27,7 @@ export const STEPS: Step[] = [
   { title: 'Limpeza e entrega', text: 'Lavagem à mão em até 3 dias úteis, com foto do resultado antes de entregar.' },
 ]
 
-// Exemplos fictícios: troque por avaliações reais de clientes antes de publicar.
-export const REVIEWS: Review[] = [
-  { name: 'Camila R.', service: 'Limpeza completa', text: 'Meu tênis estava amarelado de tanto uso. Voltou branco de verdade, até a sola.' },
-  { name: 'Rafael T.', service: 'Entressola branca', text: 'Achei que a entressola não tinha mais jeito. Ficou nova e o cabedal nem manchou.' },
-  { name: 'Juliana M.', service: 'Camurça e nobuck', text: 'A limpeza a seco no meu camurça ficou impecável, e recebi a foto antes da entrega.' },
-]
+export const CTA = {
+  title: 'Pronto para o presente?',
+  text: 'Fale com a ManéMeia: são quatro perguntas rápidas e o pedido segue direto para o nosso WhatsApp.',
+}

@@ -1,3 +1,8 @@
 export default function Footer() {
-  return <footer><span>© 2026 HopeLaab. Limpeza de tênis feita à mão.</span></footer>
+  return (
+    <footer className="foot">
+      <b>HopeLaab</b>
+      <p>Limpeza de tênis feita à mão, com carinho. Boas festas!</p>
+    </footer>
+  )
 }

@@ -1,0 +1,45 @@
+.loader{--sz:clamp(120px,25vh,210px);--rope:clamp(80px,21vh,250px);position:fixed;inset:0;z-index:100;overflow:hidden;background:linear-gradient(#93d5f5,#cfeefc 58%,#f2fbff);transition:opacity .7s ease,transform .9s cubic-bezier(.4,0,.2,1);will-change:opacity,transform}
+.loader.leaving{opacity:0;transform:scale(1.05);pointer-events:none}
+.loader img{position:absolute;display:block;user-select:none;pointer-events:none}
+
+/* neve */
+.ld-snow{position:absolute;left:0;right:0;top:0;height:calc(100% + 420px);background-repeat:repeat;will-change:transform}
+.ld-snow.a{background-size:300px;animation:ld-fall 7s linear infinite}
+.ld-snow.b{background-size:420px;animation:ld-fall2 11s linear infinite}
+@keyframes ld-fall{from{transform:translate3d(0,-300px,0)}to{transform:translate3d(0,0,0)}}
+@keyframes ld-fall2{from{transform:translate3d(0,-420px,0)}to{transform:translate3d(0,0,0)}}
+
+/* paisagem */
+.ld-cloud{will-change:transform}
+.ld-cloud.c1{top:9%;left:-260px;width:220px;animation:ld-drift 38s linear infinite}
+.ld-cloud.c2{top:22%;left:-260px;width:150px;opacity:.9;animation:ld-drift 55s linear -22s infinite}
+@keyframes ld-drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(calc(100vw + 560px),0,0)}}
+.ld-far{left:50%;bottom:17vh;width:max(100vw,1000px);transform:translateX(-50%)}
+.ld-trees{left:50%;bottom:11vh;width:max(100vw,1000px);transform:translateX(-50%)}
+.ld-ground{left:50%;bottom:-3vh;width:max(106vw,1100px);transform:translateX(-50%)}
+
+/* ManéMeia pendurada, balançando pra lá e pra cá */
+.ld-hang{position:absolute;top:0;left:50%;width:0;height:0}
+.ld-nail{position:absolute;top:-8px;left:-9px;width:18px;height:18px;border-radius:50%;background:var(--gold);border:4px solid var(--ink);z-index:2}
+.ld-swing{position:absolute;top:0;left:0;width:0;height:0;transform-origin:0 0;animation:ld-swing 1.9s ease-in-out infinite alternate;will-change:transform}
+.ld-rope{position:absolute;left:-2px;top:0;width:4px;height:var(--rope);background:var(--ink);border-radius:2px}
+.ld-sock{position:absolute;top:calc(var(--rope) - var(--sz) * .03);left:calc(var(--sz) * -.39);width:var(--sz);transform-origin:calc(var(--sz) * .39) 0;animation:ld-lag 1.9s ease-in-out .13s infinite alternate backwards;will-change:transform}
+.ld-sock .manemeia{width:100%;height:auto}
+@keyframes ld-swing{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+@keyframes ld-lag{from{transform:rotate(-7deg)}to{transform:rotate(7deg)}}
+
+/* placa com a barra de progresso */
+.ld-sign{position:absolute;left:50%;bottom:max(14px,15vh);width:min(86vw,360px);transform:translateX(-50%);display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px 12px;padding:14px 18px 16px;background:var(--paper);border:4px solid var(--ink);border-radius:26px;box-shadow:0 6px 0 var(--ink)}
+.ld-brand{grid-column:1/-1;font-family:var(--display);font-size:2.1rem;line-height:1;text-align:center;color:var(--red)}
+.ld-label{grid-column:1/-1;min-height:1.4em;text-align:center;font-weight:600;color:var(--ink)}
+.ld-bar{height:22px;overflow:hidden;background:#fff;border:3px solid var(--ink);border-radius:999px}
+.ld-bar i{display:block;width:100%;height:100%;transform:scaleX(0);transform-origin:left;background:repeating-linear-gradient(-45deg,var(--red) 0 10px,#fff 10px 20px);will-change:transform}
+.ld-pct{min-width:3.2ch;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+
+@media(max-height:520px){.loader{--sz:110px;--rope:60px}.ld-sign{bottom:8px;padding:8px 14px 10px}.ld-brand{font-size:1.5rem}}
+@media(prefers-reduced-motion:reduce){
+  .ld-snow,.ld-cloud{animation:none!important}
+  .ld-swing{animation:ld-swing-soft 3.4s ease-in-out infinite alternate!important}
+  .ld-sock{animation:none!important}
+  @keyframes ld-swing-soft{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+}

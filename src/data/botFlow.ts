@@ -2,7 +2,7 @@ import type { Answers, Prompt, Stage } from '../types'
 
 export const INTRO = {
   title: 'Oi! Eu sou a ManéMeia',
-  text: 'A meia da HopeLaab. Faço algumas perguntas rápidas, peço a foto dos tênis e mando tudo para o nosso WhatsApp.',
+  text: 'A meia de Natal da HopeLaab. Faço algumas perguntas rápidas, peço a foto dos tênis e mando tudo para o nosso WhatsApp.',
 }
 
 export const MORE = 'Tem mais um par'

@@ -1,15 +1,31 @@
-# HopeLaab — site de limpeza de tênis (React + TypeScript + Vite)
-`npm install`, `npm run dev` para desenvolver, `npm run build` para gerar a pasta `dist`.
+# HopeLaab · limpeza de tênis (edição de Natal cartunesca)
 
-O fundo fixo da página é o tênis do vídeo, recortado quadro a quadro (PNG/WebP com transparência): a rolagem escolhe o quadro, e inclinação, flutuação, sombra, poeira e brilhos são desenhados em código. Os cartões saem da "sujeira" do tênis e vêm do fundo até a frente.
+Site em React + TypeScript + Vite. Visual cartoon de Natal, com a **ManéMeia** (meia de Natal) como atendente no canto inferior direito.
 
-- `src/config.ts`: número do WhatsApp (ex.: `5511999999999`).
-- `src/data/content.ts`: menu, textos, serviços, passos e avaliações (os exemplos são fictícios, troque pelos reais).
-- `src/data/botFlow.ts`: perguntas da ManéMeia.
-- `src/assets/frames/`: quadros recortados do tênis, com transparência (f_001.webp ...). Mantenha o mesmo tamanho em todos.
-- `src/lib/glide.ts`: deslize do menu até a seção (velocidade controlada). `src/lib/scrollEngine.ts` limita a velocidade da animação.
-- `src/lib/timeline.ts`: quanto da página o vídeo ocupa (`VIDEO_END`) e o vai e volta do final.
-- `src/lib/stageDraw.ts`: halo, sombra, poeira, rastros e brilhos do palco. `src/lib/frameCache.ts`: decodifica só os quadros perto da posição atual, para a rolagem ficar leve.
-- `src/lib/scrollEngine.ts`: laço de animação único (suaviza a rolagem). `src/lib/depth.ts`: efeito de cartão vindo do fundo até a frente.
-- `src/components/Backdrop`: vídeo de fundo (mistura quadros vizinhos para ficar fluido). `Sections`: cenas, cada cartão num canto. `Header`, `SockBot`: menu e chat.
-- `npm run build:single` gera um único HTML com tudo embutido.
+## Rodar localmente
+
+```bash
+npm install
+npm run dev          # http://localhost:5173
+npm run build        # gera dist/ (site normal)
+npm run build:single # gera dist/index.html único, com tudo embutido
+npm run typecheck
+```
+
+Precisa do Node 18 ou mais novo.
+
+## Como o site funciona
+
+- **Tela de carregamento** (`src/loader/`): antes de liberar o site, carrega e decodifica fontes e toda a arte (`preload.ts`), deixa o navegador montar a cena por baixo (aquecimento da GPU) e só então revela tudo. A ManéMeia customizada (`components/Mascot/ManeMeia.tsx`) balança pendurada enquanto a barra enche. Há um teto de tempo (12 s) para nunca prender o usuário.
+- **Vídeo de fundo** (`components/Scene/`): uma cena cartoon que roda sozinha em loop de 12 s (tênis sujo → esponja → espuma → enxágue → brilho e presente), feita com a arte SVG de `src/art/` e animações CSS de `transform`/`opacity`, então roda na GPU sem JavaScript por quadro.
+- **Detalhes ligados ao scroll**: o palco do tênis desliza de um lado para o outro e inclina, o relevo faz paralaxe, o céu entardece, a barra de pirulito no topo enche e a dica de rolagem some. Usa *scroll-driven animations* do CSS (no compositor); navegadores sem suporte usam um único listener passivo (`hooks/useScrollProgress.ts`).
+- **Rolagem nativa**: nada de motor de scroll próprio; os links do menu usam o scroll suave do navegador.
+- **Chat da ManéMeia** (`components/SockBot/`, `hooks/useChatFlow.ts`, `data/botFlow.ts`): serviço → modelo → mais algum? → uma foto por tênis → entrega → nome, e envia tudo para o WhatsApp (`utils/whatsapp.ts`).
+
+## Personalizar
+
+- Número do WhatsApp: `src/config.ts` (`WHATSAPP_NUMBER`, com DDI e DDD, só dígitos).
+- Textos, serviços e passos: `src/data/content.ts`; perguntas do bot: `src/data/botFlow.ts`.
+- Cores: variáveis em `src/styles/base.css`.
+- Arte: `python3 tools/art.py` regenera os SVGs de `src/art/` (precisa de `pip install cairosvg pillow` só para gerar a prévia).
+- Duração do loop da cena: `--L` em `src/components/Scene/scene.css` (os tempos de cada fase são porcentagens do loop).

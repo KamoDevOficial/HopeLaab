@@ -15,7 +15,7 @@ export function buildMessage(a: Answers, attached: boolean): string {
     : `📸 Fotos: ${sent} de ${total} (anexo na sequência) 📎`
   const models = a.modelos.map((m, i) => `${KEYCAP[i] ?? `${i + 1}.`} ${m}`).join('\n')
   return [
-    'Oi, HopeLaab! 👋 Vim pelo site e quero um orçamento.',
+    'Oi, HopeLaab! 🎄👋 Vim pelo site e quero um orçamento.',
     '',
     `🧼 Serviço: ${a.servico ?? ''}`,
     `👟 Tênis (${total}):`,

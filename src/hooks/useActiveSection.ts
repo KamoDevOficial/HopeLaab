@@ -1,32 +1,16 @@
 import { useEffect, useState } from 'react'
 
-// Retorna o id da última seção cujo topo já passou de 45% da altura da tela.
-// As posições ficam em cache (medidas só quando o tamanho da página muda), então rolar não força layout.
+// Qual seção está no meio da tela (um único IntersectionObserver, sem ler layout durante a rolagem).
 export default function useActiveSection(ids: string[]) {
   const [active, setActive] = useState(ids[0])
   useEffect(() => {
-    let tops: number[] = []
-    const measure = () => {
-      tops = ids.map((id) => {
-        const el = document.getElementById(id)
-        return el ? el.getBoundingClientRect().top + scrollY : Infinity
-      })
-    }
-    const update = () => {
-      const line = scrollY + innerHeight * 0.45
-      let a = ids[0]
-      ids.forEach((id, i) => { if (tops[i] < line) a = id })
-      setActive(a)
-    }
-    const ro = new ResizeObserver(() => { measure(); update() })
-    ro.observe(document.body)
-    measure()
-    update()
-    addEventListener('scroll', update, { passive: true })
-    return () => {
-      ro.disconnect()
-      removeEventListener('scroll', update)
-    }
+    const els = ids.map((id) => document.getElementById(id)).filter((e): e is HTMLElement => !!e)
+    const io = new IntersectionObserver(
+      (entries) => { for (const e of entries) if (e.isIntersecting) setActive(e.target.id) },
+      { rootMargin: '-45% 0px -50% 0px' },
+    )
+    els.forEach((el) => io.observe(el))
+    return () => io.disconnect()
   }, [ids])
   return active
 }
